@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Видеообзор сервиса «КадрГраница» и интерактивный прототип.">
+<meta name="theme-color" content="#0E0A07">
+<link rel="icon" type="image/png" href="favicon.png">
+<title>КадрГраница — обзор и прототип</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+:root{
+  --bg:#0E0A07; --panel:rgba(40,31,21,.72); --line:rgba(207,177,118,.18);
+  --fg:#F2EBDD; --fg2:rgba(242,235,221,.74); --mut:#A0937D;
+  --gold:#D9BC84; --gold2:#EAD6A6; --ink:#1E160C;
+  --disp:'Montserrat','Segoe UI',sans-serif; --txt:'Golos Text','Segoe UI',system-ui,sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--txt);font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh;
+  background-image:radial-gradient(70% 50% at 85% -5%,rgba(214,180,118,.16),transparent 70%),radial-gradient(60% 45% at 0% 105%,rgba(214,180,118,.08),transparent 70%)}
+.wrap{max-width:980px;margin:0 auto;padding-block:clamp(24px,5vw,56px) 40px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:28px}
+.brand{display:flex;align-items:center;gap:12px;font-family:var(--disp);font-weight:600;font-size:18px}
+.brand img{width:36px;height:36px;display:block}
+.brand span{font-family:var(--mono);font-weight:500;color:var(--mut);letter-spacing:.2em;font-size:11px;text-transform:uppercase;border-left:1px solid var(--line);padding-left:12px}
+h1{font-family:var(--disp);font-weight:600;font-size:clamp(32px,6vw,54px);line-height:1.06;letter-spacing:-.02em;margin:0;text-wrap:balance}
+h1 em{font-style:normal;color:var(--gold)}
+.lead{color:var(--fg2);max-width:62ch;margin:12px 0 0}
+.player{border:1px solid rgba(217,188,132,.45);border-radius:16px;overflow:hidden;background:#000;box-shadow:0 0 0 6px rgba(207,177,118,.05),0 24px 70px rgba(0,0,0,.6)}
+.player video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#000}
+.next{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 24px;
+  border:1px solid var(--line);border-radius:16px;background:var(--panel);padding:20px 22px}
+.next p{margin:0;color:var(--fg2);min-width:0;flex:1 1 280px}
+.next b{color:var(--fg);font-weight:600}
+.wait{color:var(--mut);font-size:15px;margin:0}
+.btn{display:inline-flex;align-items:center;gap:10px;background:var(--gold);color:var(--ink);text-decoration:none;font-weight:600;
+  font-size:17px;padding:14px 24px;border-radius:12px;box-shadow:0 0 0 0 rgba(217,188,132,.5);animation:pulse 2.2s ease-out 3}
+.btn:hover{background:var(--gold2)}
+.btn:focus-visible{outline:2px solid var(--gold2);outline-offset:3px}
+@keyframes pulse{to{box-shadow:0 0 0 14px rgba(217,188,132,0)}}
+@media (prefers-reduced-motion:reduce){.btn{animation:none}}
+footer{color:var(--mut);font-size:14px;display:flex;flex-wrap:wrap;gap:6px 18px}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="brand">
+    <img src="logo.png" alt="">
+    КадрГраница <span>миграционный комплаенс без границ</span>
+  </div>
+
+  <header>
+    <h1>Как работает <em>«КадрГраница»</em></h1>
+    <p class="lead">Видео на две минуты: обзор компании, дедлайны, риски и штрафы, документы, уведомления, журнал действий и настройки. Компания, сотрудники и цифры в прототипе придуманы для примера.</p>
+  </header>
+
+  <div class="player">
+    <video id="v" src="kadrgranitsa_review.mp4" poster="poster.jpg" controls playsinline preload="metadata"></video>
+  </div>
+
+  <section class="next" id="after" hidden>
+    <p><b>Теперь попробуйте сами.</b> В прототипе можно открыть карточку сотрудника, посмотреть сроки и риски в рублях, подготовить уведомление и переключить тему оформления. На компьютере удобнее, чем с телефона.</p>
+    <a class="btn" href="prototype.html">Открыть прототип <span aria-hidden="true">→</span></a>
+  </section>
+  <p class="wait" id="wait">Кнопка для перехода в прототип появится, когда видео закончится.</p>
+
+  <footer><span>Команда проекта «КадрГраница»</span><span>Томск, 2026</span></footer>
+</main>
+
+<script>
+(function(){
+  var v=document.getElementById('v'),after=document.getElementById('after'),wait=document.getElementById('wait');
+  function show(){after.hidden=false;wait.hidden=true;}
+  v.addEventListener('ended',show);
+  v.addEventListener('timeupdate',function(){ if(v.duration && v.currentTime>v.duration-1.5) show(); });
+  v.addEventListener('error',show);
+})();
+</script>
+</body>
+</html>
